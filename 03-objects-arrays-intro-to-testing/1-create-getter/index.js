@@ -18,7 +18,7 @@ export function createGetter(path) {
     if (skipcount < parts.length) {
       return (parts.filter((a, i) => i >= skipcount)).join(separator);
     }
-  }
+  } 
 
   function findProperty(path, object) {
     if (typeof object === 'object') {
