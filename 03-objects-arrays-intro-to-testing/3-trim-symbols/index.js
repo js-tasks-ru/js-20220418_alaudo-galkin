@@ -5,5 +5,10 @@
  * @returns {string} - the new string without extra symbols according passed size
  */
 export function trimSymbols(string, size) {
-
+  if (!string || size < 1) { 
+    return '';
+  }
+  else {
+    return [...string].reduce((a, b) => a.slice(-size) == b.repeat(size) ? a : a + b);    
+  }
 }
