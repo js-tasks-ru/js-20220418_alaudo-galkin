@@ -34,5 +34,5 @@ export function createGetter(path) {
   }
     
   return findProperty.bind(undefined, path);
-} 
+}
 

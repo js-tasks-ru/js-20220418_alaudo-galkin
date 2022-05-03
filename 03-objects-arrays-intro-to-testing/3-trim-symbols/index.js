@@ -9,6 +9,6 @@ export function trimSymbols(string, size) {
     return '';
   }
   else {
-    return [...string].reduce((a, b) => a.slice(-size) == b.repeat(size) ? a : a + b);      
+    return [...string].reduce((a, b) => a.slice(-size) == b.repeat(size) ? a : a + b);    
   }
 }
