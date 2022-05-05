@@ -2,16 +2,15 @@ export default class ColumnChart {
 
   chartHeight = 50;
   locale = "en-us";
-  formatHeading = data => `${data}`;
 
-  constructor({ data, label, value, link, formatHeading} = {}) {
+  constructor({ data, label, value, link, formatHeading = data => `${data}`} = {}) {
 
     // initialize the values 
-    this.data = data ?? this?.data;
-    this.label = label ?? this?.label;
-    this.value = value ?? this?.value;
-    this.link = link ?? this?.link;
-    this.formatHeading = formatHeading ?? this?.formatHeading;
+    this.data = data;
+    this.label = label;
+    this.value = value ;
+    this.link = link ;
+    this.formatHeading = formatHeading;
 
     // prepare component
     this._prerender();
@@ -58,8 +57,8 @@ export default class ColumnChart {
 
   _renderChart() {
     // prepare for rendering
-    let data = this.data;
-    let chart = this.chart;
+    const data = this.data;
+    const chart = this.chart;
     chart.innerHTML = "";
 
     chart.className = "column-chart__chart";
@@ -69,11 +68,10 @@ export default class ColumnChart {
         
 
     if (data && data.length) {
-      let max = Math.max(...data);
-      let factor = this.chartHeight / max;
-      for (let d of data) {
-        chart.innerHTML += `<div style="--value: ${Math.floor(d * factor)}" data-tooltip="${(d * 100 / max).toFixed(0)}%"></div>`;
-      }
+      const max = Math.max(...data);
+      const factor = this.chartHeight / max;
+      const bars = data.map(d => `<div style="--value: ${Math.floor(d * factor)}" data-tooltip="${(d * 100 / max).toFixed(0)}%"></div>`).join();
+      chart.innerHTML = bars;
     } else {
       this.element.classList.add("column-chart_loading");
     }
