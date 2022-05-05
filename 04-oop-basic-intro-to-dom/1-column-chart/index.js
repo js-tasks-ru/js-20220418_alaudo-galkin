@@ -24,7 +24,6 @@ export default class ColumnChart {
     return this.value?.toLocaleString(this.locale);  
   }
 
-
   _prerender() {
 
     // initialize top element
@@ -65,7 +64,6 @@ export default class ColumnChart {
     chart.setAttribute("data-element", "body");
 
     this.element.classList.remove("column-chart_loading");
-        
 
     if (data && data.length) {
       const max = Math.max(...data);
