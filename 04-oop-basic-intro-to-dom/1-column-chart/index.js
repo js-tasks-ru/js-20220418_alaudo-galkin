@@ -1,86 +1,94 @@
 export default class ColumnChart {
 
-  constructor(settings) {
-    this.initialize();
-    Object.assign(this, settings);
-    this.render();
+  chartHeight = 50;
+  locale = "en-us";
+  formatHeading = data => `${data}`;
+
+  constructor({ data, label, value, link, formatHeading} = {}) {
+
+    // initialize the values 
+    this.data = data ?? this?.data;
+    this.label = label ?? this?.label;
+    this.value = value ?? this?.value;
+    this.link = link ?? this?.link;
+    this.formatHeading = formatHeading ?? this?.formatHeading;
+
+    // prepare component
+    this._prerender();
+    this._renderChart();
 
     return this;
   }
 
-  initialize() {
-    this.chartHeight = 50;
-    this.locale = "en-us";
-    this.formatHeading = data => `${data}`;
-  }
 
   get formattedValue() {
     return this.value?.toLocaleString(this.locale);  
   }
 
-  elem(tag, props, text)
-  {
-    let doc = document.createElement(tag);
-    if (props) {
-      for (let p in props) {
-        doc.setAttribute(p, props[p]);
-      }
-      if (text) {
-        doc.append(document.createTextNode(text));
-      }
-      return doc;
-    }
-  }
 
+  _prerender() {
 
-  render() {
-
+    // initialize top element
     const wrapper = document.createElement('div');
     wrapper.className = "column-chart";
     wrapper.style = `--chart-height:${this.chartHeight}`;
 
-    const title = this.elem('div', { "class" : "column-chart__title"}, `Total ${this.label}`);
-    const link = this.elem('a', { "href" : `/${this.label}`, "class" : "column-chart__link"}, null);
-    link.innerHTML = "View all";
-    title.append(link);
+    wrapper.innerHTML = `
+    <div class="column-chart__title">
+      Total ${this.label}
+      ${this.link ? `<a href="/${this.link}" class="column-chart__link">View all</a>` : ""}
+    <div>
+    `;
 
-    wrapper.append(title);
+    // create chart container
+    const container = document.createElement('div');
+    container.className = "column-chart__container";
+    container.innerHTML = `<div data-element="header" class="column-chart__header">${this.formatHeading(this.formattedValue)}</div>`;
 
-    const container = this.elem('div', { "class" : "column-chart__container"}, null);
-    container.append(this.elem('div', { "data-element" : "header", "class" : "column-chart__header"}, this.formatHeading(this.formattedValue)));
-
-    let chart = this.elem('div', { 'data-element': "body", "class": "column-chart__chart" }, null);
-
-    this.updateChart(wrapper, chart, this.data);
+    // create initial variable
+    const chart = document.createElement('div');
+    
     container.append(chart);
-
     wrapper.append(container);
 
     this.element = wrapper;
+    this.container = container;
     this.chart = chart;
   }
 
-  updateChart(wrapper, chart, data) {
+  _renderChart() {
+    // prepare for rendering
+    let data = this.data;
+    let chart = this.chart;
+    chart.innerHTML = "";
+
+    chart.className = "column-chart__chart";
+    chart.setAttribute("data-element", "body");
+
+    this.element.classList.remove("column-chart_loading");
+        
+
     if (data && data.length) {
       let max = Math.max(...data);
       let factor = this.chartHeight / max;
       for (let d of data) {
-        chart.append(this.elem('div', { "style": `--value: ${Math.floor(d * factor)}`, "data-tooltip": `${(d * 100 / max).toFixed(0)}%` }, null));
+        chart.innerHTML += `<div style="--value: ${Math.floor(d * factor)}" data-tooltip="${(d * 100 / max).toFixed(0)}%"></div>`;
       }
     } else {
-      wrapper.className += " column-chart_loading";
+      this.element.classList.add("column-chart_loading");
     }
-    return chart;
+    
+    this.chart = chart;
   }
 
   update(newData) {
     this.data = newData;
-    this.chart.innerHTML = "";
-    this.updateChart(this.wrapper, this.chart, this.data);
+    this._renderChart();
   }
 
   destroy() {
     this.data = null;
+    this.remove();
   }
 
   remove () {
