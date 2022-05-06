@@ -68,7 +68,7 @@ export default class ColumnChart {
     if (data && data.length) {
       const max = Math.max(...data);
       const factor = this.chartHeight / max;
-      const bars = data.map(d => `<div style="--value: ${Math.floor(d * factor)}" data-tooltip="${(d * 100 / max).toFixed(0)}%"></div>`).join();
+      const bars = data.map(d => `<div style="--value: ${Math.floor(d * factor)}" data-tooltip="${(d * 100 / max).toFixed(0)}%"></div>`).join("");
       chart.innerHTML = bars;
     } else {
       this.element.classList.add("column-chart_loading");
