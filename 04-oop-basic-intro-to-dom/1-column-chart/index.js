@@ -28,29 +28,29 @@ export default class ColumnChart {
 
     // initialize top element
     const wrapper = document.createElement('div');
+
     wrapper.className = "column-chart";
     wrapper.style = `--chart-height:${this.chartHeight}`;
 
     wrapper.innerHTML = `
-    <div class="column-chart__title">
-      Total ${this.label}
-      ${this.link ? `<a href="/${this.link}" class="column-chart__link">View all</a>` : ""}
-    <div>
+    <div class="column-chart" style="--chart-height:${this.chartHeight}">
+      <div class="column-chart__title">
+        Total ${this.label}
+        ${this.link ? `<a href="/${this.link}" class="column-chart__link">View all</a>` : ""}
+      </div>
+      <div class="column-chart__container">
+        <div data-element="header" class="column-chart__header">
+          ${this.formatHeading(this.formattedValue)}
+        </div>
+        <div data-element="body" class="column-chart__chart">
+        </div>
+      </div>
+    </div>
     `;
 
-    // create chart container
-    const container = document.createElement('div');
-    container.className = "column-chart__container";
-    container.innerHTML = `<div data-element="header" class="column-chart__header">${this.formatHeading(this.formattedValue)}</div>`;
+    const chart = wrapper.getElementsByClassName("column-chart__chart")[0];
 
-    // create initial variable
-    const chart = document.createElement('div');
-    
-    container.append(chart);
-    wrapper.append(container);
-
-    this.element = wrapper;
-    this.container = container;
+    this.element = wrapper.firstElementChild;
     this.chart = chart;
   }
 
@@ -59,9 +59,6 @@ export default class ColumnChart {
     const data = this.data;
     const chart = this.chart;
     chart.innerHTML = "";
-
-    chart.className = "column-chart__chart";
-    chart.setAttribute("data-element", "body");
 
     this.element.classList.remove("column-chart_loading");
 
@@ -87,7 +84,8 @@ export default class ColumnChart {
     this.remove();
   }
 
-  remove () {
+  remove() {
+    this.element?.remove();
     this.element = null;
   }
 
