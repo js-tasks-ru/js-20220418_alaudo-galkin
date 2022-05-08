@@ -110,6 +110,19 @@ describe('oop-basic-intro-to-dom/column-chart', () => {
     expect(columnChart.element).toHaveClass('column-chart_loading');
   });
 
+  it('should remove loading indication if data was loaded after initiation', () => {
+    columnChart = new ColumnChart();
+    document.body.append(columnChart);
+
+    expect(columnChart.element).toHaveClass('column-chart_loading');
+
+    const newData = [20, 30, 40];   
+    columnChart.update(newData);
+
+    expect(columnChart.element).not.toHaveClass('column-chart_loading');
+
+  });
+
   it('should have ability to be removed', () => {
     columnChart.remove();
 
