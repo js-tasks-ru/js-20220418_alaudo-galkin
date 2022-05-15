@@ -10,8 +10,32 @@
   <script type="module">
     import DoubleSlider from './index.js';
 
-    const slider = new DoubleSlider();
+    const  doubleSlider = new DoubleSlider({
+      min: 100,
+      max: 200,
+      formatValue: value => '$' + value,
+      selected: {
+        from: 120,
+        to: 150
+      }
+    });
 
-    root.append(slider.element);
+    root.append(doubleSlider.element);
+
+    const rightSlider = doubleSlider.element.querySelector('.range-slider__thumb-right');
+    const rightBoundary = doubleSlider.element.querySelector('span[data-element="to"]');
+
+    const down = new MouseEvent('pointerdown', {
+      bubbles: true
+    });
+
+    const move = new MouseEvent('pointermove', {
+      clientX: 1000,
+      bubbles: true
+    });
+
+    rightSlider.dispatchEvent(down);
+    rightSlider.dispatchEvent(move);
+
   </script>
 </body>
