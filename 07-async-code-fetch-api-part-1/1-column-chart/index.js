@@ -6,6 +6,7 @@ export default class ColumnChart {
 
     chartHeight = 50;
     locale = "en-us";
+    subElements = {};
   
     constructor({ url, range, data, label, value, link, formatHeading = data => `${data}`} = {}) {
   
@@ -62,7 +63,6 @@ export default class ColumnChart {
   
       this.element = wrapper.firstElementChild;
 
-      this.subElements = {};
       this.subElements.header = header;
       this.subElements.body = chart;
     }
